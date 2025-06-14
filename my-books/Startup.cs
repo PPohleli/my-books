@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using my_books.Data;
+using my_books.Data.Services;
 
 namespace my_books
 {
@@ -36,6 +37,9 @@ namespace my_books
 
             //Configure DBContext with SQL database
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
+
+            //Configure services
+            services.AddTransient<BooksService>();
 
             services.AddSwaggerGen(c =>
             {
