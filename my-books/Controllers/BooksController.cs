@@ -15,10 +15,10 @@ namespace my_books.Controllers
             _booksService = booksService;
         }
 
-        [HttpPost("add-book")]
+        [HttpPost("add-book-with-authors")]
         public IActionResult AddBook([FromBody] BookVM bookVM)
         {
-            _booksService.AddBook(bookVM);
+            _booksService.AddBookWithAuthors(bookVM);
             return Ok();
         }
 

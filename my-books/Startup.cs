@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using my_books.Data;
 using my_books.Data.Services;
+using my_books.Exceptions;
 
 namespace my_books
 {
@@ -40,6 +41,8 @@ namespace my_books
 
             //Configure services
             services.AddTransient<BooksService>();
+            services.AddTransient<AuthorsService>();
+            services.AddTransient<PublishersService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -62,6 +65,11 @@ namespace my_books
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //Exception Handling
+            //app.onfigureCustomExceptionHandler();
+            app.ConfigureBuildInExceptionHandler();
+
 
             app.UseEndpoints(endpoints =>
             {
