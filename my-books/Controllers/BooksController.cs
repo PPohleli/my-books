@@ -10,7 +10,7 @@ namespace my_books.Controllers
     public class BooksController : ControllerBase
     {
         public BooksService _booksService;
-        public BooksController(BooksService booksService) 
+        public BooksController(BooksService booksService)
         {
             _booksService = booksService;
         }
@@ -20,6 +20,18 @@ namespace my_books.Controllers
         {
             _booksService.AddBook(bookVM);
             return Ok();
+        }
+
+        [HttpGet("get-all-books")]
+        public IActionResult GetAllBooks()
+        {
+            return Ok(_booksService.GetAllBooks());
+        }
+
+        [HttpGet("get-book-by-id/{id}")]
+        public IActionResult GetBook(int id)
+        {
+            return Ok(_booksService.GetBookById(id));
         }
     }
 }
