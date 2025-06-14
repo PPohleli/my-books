@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using my_books.Data.Services;
 using my_books.Data.ViewModels;
 using my_books.Exceptions;
+using System;
 
 namespace my_books.Controllers
 {
@@ -36,9 +37,11 @@ namespace my_books.Controllers
             }
         }
 
-        [HttpGet("get-publisher-books-by-id/{id}")]
+        [HttpGet("get-publisher-by-id/{id}")]
         public IActionResult GetPublisherById(int id)
         {
+            throw new Exception("This is an exception that will be handled by middlewareerro");
+
             var response = _publishersService.GetPublisherById(id);
 
             if (response != null) 
