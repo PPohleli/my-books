@@ -52,9 +52,19 @@ namespace my_books.Data.Services
             return allBooks;
         }
 
-        public Book GetBookById(int bookId) /*=> _context.Books.FirstOrDefault(n => n.Id == bookId);*/
+        public BookWithAuthorsVM GetBookById(int bookId) /*=> _context.Books.FirstOrDefault(n => n.Id == bookId);*/
         {
-            var book = _context.Books.FirstOrDefault(n => n.Id == bookId);
+            var book = _context.Books.Where(n => n.Id == bookId).Select(book => new BookWithAuthorsVM()
+            {
+                Title = book.Title,
+                Description = book.Description,
+                IsRead = book.IsRead,
+                DateRead = book.IsRead ? book.DateRead.Value : null,
+                Genre = book.Genre,
+                CoverUrl = book.CoverUrl,
+                PublisherName = book.Publisher.Name,
+                AuthorsNames = book.Book_Authors.Select(n => n.Author.FullName).ToList()
+            }).FirstOrDefault();
             return book;
         }
 
