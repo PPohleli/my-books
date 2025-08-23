@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using my_books.Data;
 using my_books.Data.Models;
+using my_books.Data.Services;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace my_books_tests
 {
@@ -12,7 +14,7 @@ namespace my_books_tests
         private static DbContextOptions<AppDbContext> dbContextOptions = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(databaseName: "BookDbTest").Options;
 
         AppDbContext context;
-
+        PublishersService publishersService;
 
         [OneTimeSetUp]
         public void Setup()
@@ -20,7 +22,48 @@ namespace my_books_tests
             context = new AppDbContext(dbContextOptions);
             context.Database.EnsureCreated();
             SeedDatabase();
+
+            publishersService = new PublishersService(context);
         }
+
+        //Tests Cases
+        [Test, Order(1)]
+        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithNoPageNumber()
+        {
+            var result = publishersService.GetAllPublishers("", "", null);
+
+            Assert.That(result.Count, Is.EqualTo(5));
+        }
+
+        [Test, Order(2)]
+        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithPageNumber()
+        {
+            var result = publishersService.GetAllPublishers("", "", 2);
+
+            Assert.That(result.Count, Is.EqualTo(1));
+        }
+
+        [Test, Order(3)]
+        public void GetAllPublishers_WithNoSortBy_WithSearchString_WithNoPageNumber()
+        {
+            var result = publishersService.GetAllPublishers("", "3", null);
+
+            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result.FirstOrDefault().Name, Is.EqualTo("Publisher 3"));
+        }
+
+        [Test, Order(4)]
+        public void GetAllPublishers_WithSortBy_WithNoSearchString_WithNoPageNumber()
+        {
+            var result = publishersService.GetAllPublishers("name_desc", "", null);
+
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.FirstOrDefault().Name, Is.EqualTo("Publisher 6"));
+        }
+
+
+
+
 
         [OneTimeTearDown]
         public void CleanUp()
@@ -40,12 +83,27 @@ namespace my_books_tests
                 new Publisher()
                 {
                     Id = 2,
-                    Name = "Publisher 3"
+                    Name = "Publisher 2"
                 },
                 new Publisher()
                 {
                     Id = 3,
                     Name = "Publisher 3"
+                },
+                new Publisher()
+                {
+                    Id = 4,
+                    Name = "Publisher 4"
+                },
+                new Publisher()
+                {
+                    Id = 5,
+                    Name = "Publisher 5"
+                },
+                new Publisher()
+                {
+                    Id = 6,
+                    Name = "Publisher 6"
                 },
             };
             context.Publishers.AddRange(publishers);
