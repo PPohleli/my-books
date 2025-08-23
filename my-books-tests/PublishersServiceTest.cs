@@ -26,7 +26,7 @@ namespace my_books_tests
             publishersService = new PublishersService(context);
         }
 
-        //Tests Cases
+        //Tests Cases for GetAllPublishers() method
         [Test, Order(1)]
         public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithNoPageNumber()
         {
@@ -61,8 +61,23 @@ namespace my_books_tests
             Assert.That(result.FirstOrDefault().Name, Is.EqualTo("Publisher 6"));
         }
 
+        //Tests Cases for GetPublisherById() method
+        [Test, Order(5)]
+        public void GetPublisherById_ExistingId_ReturnsPublisher()
+        {
+            var result = publishersService.GetPublisherById(1);
 
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Name, Is.EqualTo("Publisher 1"));
+        }
 
+        [Test, Order(6)]
+        public void GetPublisherById_NonExistingId_ReturnsNull()
+        {
+            var result = publishersService.GetPublisherById(100);
+
+            Assert.That(result, Is.Null);
+        }
 
 
         [OneTimeTearDown]
