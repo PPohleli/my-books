@@ -30,7 +30,7 @@ namespace my_books_tests
 
         //Tests Cases for GetAllPublishers() method
         [Test, Order(1)]
-        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithNoPageNumber()
+        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithNoPageNumber_Test()
         {
             var result = publishersService.GetAllPublishers("", "", null);
 
@@ -38,7 +38,7 @@ namespace my_books_tests
         }
 
         [Test, Order(2)]
-        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithPageNumber()
+        public void GetAllPublishers_WithNoSortBy_WithNoSearchString_WithPageNumber_Test()
         {
             var result = publishersService.GetAllPublishers("", "", 2);
 
@@ -46,7 +46,7 @@ namespace my_books_tests
         }
 
         [Test, Order(3)]
-        public void GetAllPublishers_WithNoSortBy_WithSearchString_WithNoPageNumber()
+        public void GetAllPublishers_WithNoSortBy_WithSearchString_WithNoPageNumber_Test()
         {
             var result = publishersService.GetAllPublishers("", "3", null);
 
@@ -55,7 +55,7 @@ namespace my_books_tests
         }
 
         [Test, Order(4)]
-        public void GetAllPublishers_WithSortBy_WithNoSearchString_WithNoPageNumber()
+        public void GetAllPublishers_WithSortBy_WithNoSearchString_WithNoPageNumber_Test()
         {
             var result = publishersService.GetAllPublishers("name_desc", "", null);
 
@@ -65,7 +65,7 @@ namespace my_books_tests
 
         //Tests Cases for GetPublisherById() method
         [Test, Order(5)]
-        public void GetPublisherById_ExistingId_ReturnsPublisher()
+        public void GetPublisherById_ExistingId_ReturnsPublisher_Test()
         {
             var result = publishersService.GetPublisherById(1);
 
@@ -74,7 +74,7 @@ namespace my_books_tests
         }
 
         [Test, Order(6)]
-        public void GetPublisherById_NonExistingId_ReturnsNull()
+        public void GetPublisherById_NonExistingId_ReturnsNull_Test()
         {
             var result = publishersService.GetPublisherById(100);
 
@@ -84,18 +84,19 @@ namespace my_books_tests
 
         //Test Cases for AddPublisher() method
         [Test, Order(7)]
-        public void AddPublisher_WithException() 
+        public void AddPublisher_WithException_Test() 
         {
             var newPublisher = new PublisherVM()
             {
                 Name = "100Publisher"
             };
 
-            Assert.That(() => publishersService.AddPublisher(newPublisher), Throws.Exception.TypeOf<PublisherNameException>().With.Message.EqualTo("Name starts with a number"));
+            Assert.That(() => publishersService.AddPublisher(newPublisher), Throws.Exception.TypeOf<PublisherNameException>()
+                .With.Message.EqualTo("Name starts with a number"));
         }
 
         [Test, Order(8)]
-        public void AddPublisher_WithNoException()
+        public void AddPublisher_WithNoException_Test()
         {
             var newPublisher = new PublisherVM()
             {
@@ -105,6 +106,25 @@ namespace my_books_tests
             var result = publishersService.AddPublisher(newPublisher);
             Assert.That(result, Is.Not.Null);
         }
+
+        //Test Cases for GetPublisherData() method
+        [Test, Order(9)]
+        public void GetPublisherData_Test()
+        {
+            var result = publishersService.GetPublisherData(1);
+            
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Name, Is.EqualTo("Publisher 1"));
+            Assert.That(result.BookAuthors, Is.Not.Empty);
+            Assert.That(result.BookAuthors.Count, Is.GreaterThan(0));
+
+            var firstBookName = result.BookAuthors.OrderBy(n => n.BookName).FirstOrDefault().BookName;
+            Assert.That(firstBookName, Is.EqualTo("Book 1 Title"));
+        }
+
+
+
+
 
 
         [OneTimeTearDown]
