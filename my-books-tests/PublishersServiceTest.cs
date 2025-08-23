@@ -122,6 +122,24 @@ namespace my_books_tests
             Assert.That(firstBookName, Is.EqualTo("Book 1 Title"));
         }
 
+        //Test Cases for DeletePublisherById() method
+        [Test, Order(10)]
+        public void DeletePublisherById_NonExisting_Test()
+        {
+            int id = 100;
+            Assert.That(() => publishersService.DeletePublisherById(id), Throws.Exception
+                .With.Message.EqualTo($"Publisher with ID {id} not found."));
+        }
+
+        [Test, Order(10)]
+        public void DeletePublisherById_Existing_Test()
+        {
+            int id = 6;
+            publishersService.DeletePublisherById(id);
+
+            var result = publishersService.GetPublisherById(id);
+            Assert.That(result, Is.Null);
+        }
 
 
 
