@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using my_books.Data.Models;
 
 namespace my_books.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser> //DbContext
     {
         //define AppDbContext as a file to be used by EF to map the app with the database
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){  }
@@ -18,6 +19,8 @@ namespace my_books.Data
 
             //Define primary key for table
             modelBuilder.Entity<Log>().HasKey(l => l.Id);
+
+            base.OnModelCreating(modelBuilder); //IdentityDbContext
         }
 
 
