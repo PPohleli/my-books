@@ -55,6 +55,73 @@ namespace my_books_tests
             Assert.That(actionResultDataSecondPage.Count, Is.EqualTo(1));
         }
 
+        //Tests Cases for GetPublisherById() method
+        [Test, Order(2)]
+        public void HTTP_GetPublisherById_ExistingID_ReturnOk_Test()
+        {
+            int publisherId = 1;
+
+            IActionResult actionResult = publishersController.GetPublisherById(publisherId);
+            Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
+
+            var publisherData = (actionResult as OkObjectResult).Value as Publisher;
+            Assert.That(publisherData.Id, Is.EqualTo(1));
+            Assert.That(publisherData.Name, Is.EqualTo("publisher 1").IgnoreCase);
+        }
+
+        [Test, Order(3)]
+        public void HTTP_GetPublisherById_NonExistingID_ReturnNotFound_Test()
+        {
+            int publisherId = 999;
+
+            IActionResult actionResult = publishersController.GetPublisherById(publisherId);
+
+            Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
+        }
+
+        //Tests Cases for AddPublisher() method
+        [Test, Order(4)]
+        public void HTTP_AddPublisher_ValidPublisherObject_ReturnsCreated_Test()
+        {
+            var newPublisherVM = new PublisherVM()
+            {
+                Name = "New Publisher"
+            };
+
+            IActionResult actionResult = publishersController.AddPublisher(newPublisherVM);
+            Assert.That(actionResult, Is.TypeOf<CreatedResult>());
+        }
+
+        [Test, Order(5)]
+        public void HTTP_AddPublisher_InvalidPublisherObject_ReturnsBadRequest_Test()
+        {
+            var newPublisherVM = new PublisherVM()
+            {
+                Name = "999 Publisher"
+            };
+
+            IActionResult actionResult = publishersController.AddPublisher(newPublisherVM);
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        //Tests Cases for DeletePublisherData() method
+        [Test, Order(6)]
+        public void HTTP_DeletePublisherData_NonExistingId_ReturnsBadRequest_Test()
+        {
+            int id = 999;
+            IActionResult actionResult = publishersController.DeletePublisherData(id);
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+
+        }
+
+        [Test, Order(7)]
+        public void HTTP_DeletePublisherData_ExistingId_ReturnsOkresult_Test()
+        {
+            int id = 6;
+            IActionResult actionResult = publishersController.DeletePublisherData(id);
+            Assert.That(actionResult, Is.TypeOf<OkResult>());
+
+        }
 
         [OneTimeTearDown]
         public void CleanUp()
