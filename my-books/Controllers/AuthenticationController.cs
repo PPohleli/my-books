@@ -36,6 +36,12 @@ namespace my_books.Controllers
         [HttpPost("register-user")]
         public async Task<IActionResult> Register([FromBody] RegisterVM payload)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Please, provide all required fields");
+            }
+
             var userExists = await _userManager.FindByEmailAsync(payload.Email);
 
             if (userExists != null) 
@@ -60,6 +66,32 @@ namespace my_books.Controllers
             return Created(nameof(Register), $"User with email - {payload.Email} was created successfully!");
 
         }
+
+        [HttpPost("login-user")]
+        public async Task<IActionResult> Login([FromBody]LoginVM payload)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Please, provide all required fields");
+            }
+
+            var user = await _userManager.FindByEmailAsync(payload.Email);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, payload.Password))
+            {
+                var tokenValue = await GenerateJwtToken(user);
+                return Ok(tokenValue);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+
+
+
+
         private async Task<AuthResultVM> GenerateJwtToken(ApplicationUser user)
         {
             var authClaims = new List<Claim>()
