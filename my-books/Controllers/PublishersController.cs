@@ -6,14 +6,15 @@ using my_books.ActionResults;
 using my_books.Data.Models;
 using my_books.Data.Services;
 using my_books.Data.ViewModels;
+using my_books.Data.ViewModels.Authentication;
 using my_books.Exceptions;
 using System;
 
 namespace my_books.Controllers
 {
+    [Authorize(Roles = UserRoles.Publisher+","+UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class PublishersController : ControllerBase
     {
         private readonly PublishersService _publishersService;

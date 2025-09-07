@@ -133,6 +133,7 @@ namespace my_books
             });
 
             //AppDbInitializer.Seed(app);
+            AppDbInitializer.SeedRoles(app).Wait();
         }
     }
 }
